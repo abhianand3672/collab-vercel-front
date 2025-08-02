@@ -63,6 +63,27 @@ export default function Register() {
     setError(null);
     setLoading(true);
 
+   // add a constrint on linkedin url and github url
+  const linkedinUrlPattern = /^https:\/\/(www\.)?linkedin\.com\/in\/[A-Za-z0-9_-]+\/?$/i;
+  const githubUrlPattern = /^https:\/\/(www\.)?github\.com\/[A-Za-z0-9_-]+\/?$/i;
+
+  // Validate LinkedIn URL if provided
+  if (formData.linkedin.trim() !== '' && !linkedinUrlPattern.test(formData.linkedin.trim())) {
+    setError('Please enter a valid LinkedIn profile URL (e.g., https://linkedin.com/in/your-profile)');
+    setLoading(false);
+    return;
+  }
+
+  // Validate skill links: must be GitHub URLs only
+  const invalidSkillLinks = formData.skillLinks.filter(
+    link => link.trim() !== '' && !githubUrlPattern.test(link.trim())
+  );
+  if (invalidSkillLinks.length > 0) {
+    setError('Skill links must be valid GitHub profile or repository URLs.');
+    setLoading(false);
+    return;
+  }
+
     // Validate that at least one skill link is provided
     const validSkillLinks = formData.skillLinks.filter(link => link.trim() !== '');
     if (validSkillLinks.length === 0) {
